@@ -583,6 +583,8 @@
         case kHIDUsage_GD_Rx:
         case kHIDUsage_GD_Ry:
         case kHIDUsage_GD_Rz:
+        case kHIDUsage_GD_Dial:
+        case kHIDUsage_GD_Slider:
             [mStickElements addObject: element];
             break;
             

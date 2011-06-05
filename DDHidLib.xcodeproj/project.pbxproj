@@ -189,7 +189,7 @@
 		55170E640B8ECEF600C82155 /* RemoteFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = RemoteFeedbackView.m; sourceTree = "<group>"; };
 		55170E660B8ECF0000C82155 /* AppleRemote.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = AppleRemote.tiff; sourceTree = "<group>"; };
 		55193E500B93F2EE004C0C98 /* DDHidLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DDHidLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		55193E510B93F2EE004C0C98 /* DDHidLib-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "DDHidLib-Info.plist"; sourceTree = "<group>"; };
+		55193E510B93F2EE004C0C98 /* DDHidLib-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DDHidLib-Info.plist"; sourceTree = "<group>"; };
 		556E1E680B5359F9002F709C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		55917B4F0B533C82005308AC /* DDHidDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidDevice.h; sourceTree = "<group>"; };
 		55917B500B533C82005308AC /* DDHidDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHidDevice.m; sourceTree = "<group>"; };
@@ -203,7 +203,7 @@
 		55917E730B541541005308AC /* NSDictionary+DDHidExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+DDHidExtras.m"; sourceTree = "<group>"; };
 		55917F610B545104005308AC /* DDHidUsageTables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidUsageTables.h; sourceTree = "<group>"; };
 		55917F620B545104005308AC /* DDHidUsageTables.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHidUsageTables.m; sourceTree = "<group>"; };
-		55917F760B54535B005308AC /* DDHidStandardUsages.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DDHidStandardUsages.plist; path = ../lib/DDHidStandardUsages.plist; sourceTree = "<group>"; };
+		55917F760B54535B005308AC /* DDHidStandardUsages.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = DDHidStandardUsages.plist; path = ../lib/DDHidStandardUsages.plist; sourceTree = "<group>"; };
 		559180CA0B575698005308AC /* DDHidQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidQueue.h; sourceTree = "<group>"; };
 		559180CB0B575698005308AC /* DDHidQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHidQueue.m; sourceTree = "<group>"; };
 		559181A40B576149005308AC /* DDHidEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidEvent.h; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 		559CB82B0B595B2F00C8FD74 /* DDHidUsage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidUsage.h; sourceTree = "<group>"; };
 		559CB82C0B595B2F00C8FD74 /* DDHidUsage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDHidUsage.m; sourceTree = "<group>"; };
 		559CBAE10B5B313000C8FD74 /* HIDDeviceTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HIDDeviceTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		559CBAE90B5B31AB00C8FD74 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		559CBAE90B5B31AB00C8FD74 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		559CBAEA0B5B31AB00C8FD74 /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		559CBBCC0B5B336600C8FD74 /* libddhid.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libddhid.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		559CBC2A0B5B34C300C8FD74 /* DDHidMouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDHidMouse.h; sourceTree = "<group>"; };
@@ -606,7 +606,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "DDHidLib" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* HIDBrowser */;
 			projectDirPath = "";
 			projectRoot = "";
