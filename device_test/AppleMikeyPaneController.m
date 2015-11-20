@@ -22,17 +22,11 @@
  * SOFTWARE.
  */
 
-#import "KeyboardPaneController.h"
+#import "AppleMikeyPaneController.h"
 #import "DDHidLib.h"
 #include <IOKit/hid/IOHIDUsageTables.h>
 
-@interface KeyboardPaneController (Private)
-
-- (void) addEvent: (NSString *) event usageId: (unsigned) usageId;
-
-@end
-
-@implementation KeyboardPaneController
+@implementation AppleMikeyPaneController
 
 - (id) init;
 {
@@ -47,16 +41,16 @@
 
 - (void) awakeFromNib;
 {
-    NSArray * keyboards = [DDHidKeyboard allKeyboards];
+    NSArray * mikeys = [DDHidAppleMikey allMikeys];
     
-    [keyboards makeObjectsPerformSelector: @selector(setDelegate:)
+    [mikeys makeObjectsPerformSelector: @selector(setDelegate:)
                                withObject: self];
-    [self setKeyboards: keyboards];
+    [self setMikeys: mikeys];
     
-    if ([keyboards count] > 0)
-        [self setKeyboardIndex: 0];
+    if ([mikeys count] > 0)
+        [self setMikeyIndex: 0];
     else
-        [self setKeyboardIndex: NSNotFound];
+        [self setMikeyIndex: NSNotFound];
 }
 
 //=========================================================== 
@@ -64,54 +58,54 @@
 //=========================================================== 
 - (void) dealloc
 {
-    [mKeyboards release];
+    [mMikeys release];
     [mEvents release];
     
-    mKeyboards = nil;
+    mMikeys = nil;
     mEvents = nil;
     [super dealloc];
 }
 
 //=========================================================== 
-//  keyboards 
+//  mikeys
 //=========================================================== 
-- (NSArray *) keyboards
+- (NSArray *) mikeys
 {
-    return mKeyboards; 
+    return mMikeys;
 }
 
-- (void) setKeyboards: (NSArray *) theKeyboards
+- (void) setMikeys: (NSArray *) theMikeys
 {
-    if (mKeyboards != theKeyboards)
+    if (mMikeys != theMikeys)
     {
-        [mKeyboards release];
-        mKeyboards = [theKeyboards retain];
+        [mMikeys release];
+        mMikeys = [theMikeys retain];
     }
 }
 //=========================================================== 
-//  keyboardIndex 
+//  mikeyIndex
 //=========================================================== 
-- (unsigned) keyboardIndex
+- (unsigned) mikeyIndex
 {
-    return mKeyboardIndex;
+    return mMikeyIndex;
 }
 
-- (void) setKeyboardIndex: (unsigned) theKeyboardIndex
+- (void) setMikeyIndex: (unsigned) theMikeyIndex
 {
-    if (mCurrentKeyboard != nil)
+    if (mCurrentMikey != nil)
     {
-        [mCurrentKeyboard stopListening];
-        mCurrentKeyboard = nil;
+        [mCurrentMikey stopListening];
+        mCurrentMikey = nil;
     }
-    mKeyboardIndex = theKeyboardIndex;
-    [mKeyboardsController setSelectionIndex: mKeyboardIndex];
+    mMikeyIndex = theMikeyIndex;
+    [mMikeysController setSelectionIndex: mMikeyIndex];
     [self willChangeValueForKey: @"events"];
     [mEvents removeAllObjects];
     [self didChangeValueForKey: @"events"];
-    if (mKeyboardIndex != NSNotFound)
+    if (mMikeyIndex != NSNotFound)
     {
-        mCurrentKeyboard = [mKeyboards objectAtIndex: mKeyboardIndex];
-        [mCurrentKeyboard startListening];
+        mCurrentMikey = [mMikeys objectAtIndex: mMikeyIndex];
+        [mCurrentMikey startListening];
     }
 }
 
@@ -140,40 +134,27 @@
     [[self events] removeObject: theEvent];
 }
 
-
 @end
 
-@implementation KeyboardPaneController (DDHidKeyboardDelegate)
+@implementation AppleMikeyPaneController (DDHidAppleMikeyDelegate)
 
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-               keyDown: (unsigned) usageId;
+- (void) ddhidAppleMikey:(DDHidAppleMikey *)mikey press:(unsigned int)usageId upOrDown:(BOOL)upOrDown
 {
-    [self addEvent: @"Key Down" usageId: usageId];
-}
-
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-                 keyUp: (unsigned) usageId;
-{
-    [self addEvent: @"Key Up" usageId: usageId];
-}
-
-@end
-
-@implementation KeyboardPaneController (Private)
-
-- (void) addEvent: (NSString *) event usageId: (unsigned) usageId;
-{
-    DDHidUsageTables * usageTables = [DDHidUsageTables standardUsageTables];
-    NSString * description = [NSString stringWithFormat: @"%@ (0x%04X)",
-        [usageTables descriptionForUsagePage: kHIDPage_KeyboardOrKeypad
-                                       usage: usageId],
-        usageId];
+    NSString *usage = nil;
+    if(usageId==kHIDUsage_GD_SystemMenuDown) {
+        usage = @"MenuDown";
+    }
+    else if(usageId == kHIDUsage_GD_SystemMenuUp) {
+        usage = @"MenuUp";
+    }
     
-    NSMutableDictionary * row = [mKeyboardEventsController newObject];
-    [row setObject: event forKey: @"event"];
-    [row setObject: description forKey: @"description"];
-    [mKeyboardEventsController addObject: row];
+    if(!usage)
+        return;
+    
+    NSMutableDictionary * row = [mMikeysEventsController newObject];
+    [row setObject: upOrDown ? @"Down" : @"Up" forKey: @"event"];
+    [row setObject:usage forKey: @"description"];
+    [mMikeysEventsController addObject: row];
 }
 
 @end
-

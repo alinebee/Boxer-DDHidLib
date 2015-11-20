@@ -22,15 +22,45 @@
  * SOFTWARE.
  */
 
+#import <Cocoa/Cocoa.h>
 #import "DDHidDevice.h"
-#import "DDHidElement.h"
-#import "DDHidUsage.h"
-#import "DDHidQueue.h"
-#import "DDHidEvent.h"
-#import "DDHidUsageTables.h"
-#import "DDHidMouse.h"
-#import "DDHidJoystick.h"
-#import "DDHidKeyboard.h"
-#import "DDHidAppleRemote.h"
-#import "DDHidAppleMikey.h"
-#import "DDHidKeyboardBarcodeScanner.h"
+
+@class DDHidElement;
+@class DDHidQueue;
+
+@interface DDHidAppleMikey : DDHidDevice
+{
+    NSMutableArray * mPressElements;
+    
+    id mDelegate;
+}
+
++ (NSArray *) allMikeys;
+
+- (id) initWithDevice: (io_object_t) device error: (NSError **) error_;
+
+#pragma mark -
+#pragma mark Elements
+
+- (NSArray *) pressElements;
+
+- (unsigned) numberOfKeys;
+
+- (void) addElementsToQueue: (DDHidQueue *) queue;
+
+#pragma mark -
+#pragma mark Asynchronous Notification
+
+- (void) setDelegate: (id) delegate;
+
+- (void) addElementsToDefaultQueue;
+
+@end
+
+@interface NSObject (DDHidAppleMikeyDelegate)
+
+- (void) ddhidAppleMikey: (DDHidAppleMikey *) mikey
+                   press: (unsigned) usageId
+                upOrDown:(BOOL)upOrDown;
+
+@end
