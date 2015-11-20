@@ -33,18 +33,18 @@
     IBOutlet NSArrayController * mMikeysEventsController;
 
     NSArray * mMikeys;
-    unsigned mMikeyIndex;
+    NSUInteger mMikeyIndex;
     NSMutableArray * mEvents;
     
     // Don't retain these
     DDHidAppleMikey * mCurrentMikey;
 }
 
-- (NSArray *) mMikeys;
+- (NSArray *) mikeys;
 - (void) setMikeys: (NSArray *) theMikeys;
 
-- (unsigned) mikeyIndex;
-- (void) setMikeyIndex: (unsigned) theMikeyIndex;
+- (NSUInteger) mikeyIndex;
+- (void) setMikeyIndex: (NSUInteger) theMikeyIndex;
 
 - (NSMutableArray *) events;
 - (void) setEvents: (NSMutableArray *) theEvents;

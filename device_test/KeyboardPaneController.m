@@ -91,12 +91,12 @@
 //=========================================================== 
 //  keyboardIndex 
 //=========================================================== 
-- (unsigned) keyboardIndex
+- (NSUInteger) keyboardIndex
 {
     return mKeyboardIndex;
 }
 
-- (void) setKeyboardIndex: (unsigned) theKeyboardIndex
+- (void) setKeyboardIndex: (NSUInteger) theKeyboardIndex
 {
     if (mCurrentKeyboard != nil)
     {
@@ -169,7 +169,7 @@
                                        usage: usageId],
         usageId];
     
-    NSMutableDictionary * row = [mKeyboardEventsController newObject];
+    NSMutableDictionary * row = [[mKeyboardEventsController newObject] autorelease];
     [row setObject: event forKey: @"event"];
     [row setObject: description forKey: @"description"];
     [mKeyboardEventsController addObject: row];

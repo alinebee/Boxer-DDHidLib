@@ -85,12 +85,12 @@
 //=========================================================== 
 //  mikeyIndex
 //=========================================================== 
-- (unsigned) mikeyIndex
+- (NSUInteger) mikeyIndex
 {
     return mMikeyIndex;
 }
 
-- (void) setMikeyIndex: (unsigned) theMikeyIndex
+- (void) setMikeyIndex: (NSUInteger) theMikeyIndex
 {
     if (mCurrentMikey != nil)
     {
@@ -151,7 +151,7 @@
     if(!usage)
         return;
     
-    NSMutableDictionary * row = [mMikeysEventsController newObject];
+    NSMutableDictionary * row = [[mMikeysEventsController newObject] autorelease];
     [row setObject: upOrDown ? @"Down" : @"Up" forKey: @"event"];
     [row setObject:usage forKey: @"description"];
     [mMikeysEventsController addObject: row];
