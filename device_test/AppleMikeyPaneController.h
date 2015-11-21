@@ -22,15 +22,41 @@
  * SOFTWARE.
  */
 
-#import "DDHidDevice.h"
-#import "DDHidElement.h"
-#import "DDHidUsage.h"
-#import "DDHidQueue.h"
-#import "DDHidEvent.h"
-#import "DDHidUsageTables.h"
-#import "DDHidMouse.h"
-#import "DDHidJoystick.h"
-#import "DDHidKeyboard.h"
-#import "DDHidAppleRemote.h"
-#import "DDHidAppleMikey.h"
-#import "DDHidKeyboardBarcodeScanner.h"
+#import <Cocoa/Cocoa.h>
+
+
+@class DDHidAppleMikey;
+
+@interface AppleMikeyPaneController : NSObject
+{
+    IBOutlet NSArrayController * mMikeysController;
+    IBOutlet NSArrayController * mMikeysEventsController;
+
+    NSArray * mMikeys;
+    NSUInteger mMikeyIndex;
+    NSMutableArray * mEvents;
+    
+    // Don't retain these
+    DDHidAppleMikey * mCurrentMikey;
+}
+
+- (NSArray *) mikeys;
+- (void) setMikeys: (NSArray *) theMikeys;
+
+- (NSUInteger) mikeyIndex;
+- (void) setMikeyIndex: (NSUInteger) theMikeyIndex;
+
+- (NSMutableArray *) events;
+- (void) setEvents: (NSMutableArray *) theEvents;
+- (void) addEvent: (id)theEvent;
+- (void) removeEvent: (id)theEvent;
+
+@end
+
+@interface AppleMikeyPaneController (DDHidAppleMikeyDelegate)
+
+- (void) ddhidAppleMikey: (DDHidAppleMikey *) mikey
+                   press: (unsigned) usageId
+                upOrDown:(BOOL)upOrDown;
+
+@end

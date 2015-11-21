@@ -22,39 +22,41 @@
  * SOFTWARE.
  */
 
-#import "DDHidKeyboard.h"
+#import "DDHidAppleMikey.h"
 #import "DDHidElement.h"
 #import "DDHidUsage.h"
 #import "DDHidQueue.h"
 #import "DDHidEvent.h"
 #include <IOKit/hid/IOHIDUsageTables.h>
 
-@interface DDHidKeyboard (DDHidKeyboardDelegate)
+#define APPLE_MIC_ONLY 1
 
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-               keyDown: (unsigned) usageId;
+@interface DDHidAppleMikey (DDHidAppleMikeyDelegate)
 
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-                 keyUp: (unsigned) usageId;
+- (void) ddhidAppleMikey: (DDHidAppleMikey *) mikey
+               press: (unsigned) usageId
+                upOrDown:(BOOL)upOrDown;
 
 @end
 
-@interface DDHidKeyboard (Private)
+@interface DDHidAppleMikey (Private)
 
-- (void) initKeyboardElements: (NSArray *) elements;
+- (void) initPressElements: (NSArray *) elements;
 - (void) ddhidQueueHasEvents: (DDHidQueue *) hidQueue;
 
 @end
 
-@implementation DDHidKeyboard
+@implementation DDHidAppleMikey
 
-+ (NSArray *) allKeyboards;
++ (NSArray *) allMikeys;
 {
-    return
-        [DDHidDevice allDevicesMatchingUsagePage: kHIDPage_GenericDesktop
-                                         usageId: kHIDUsage_GD_Keyboard
-                                       withClass: self
-                               skipZeroLocations: YES];
+    //add mikeys
+    id a2 = [self allDevicesMatchingUsagePage:12 usageId:1 withClass:self skipZeroLocations:NO];
+#if APPLE_MIC_ONLY
+    a2 = [a2 filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"productName == \"Apple Mikey HID Driver\""]];
+#endif
+    
+    return a2;
 }
 
 - (id) initWithDevice: (io_object_t) device error: (NSError **) error_;
@@ -63,8 +65,8 @@
     if (self == nil)
         return nil;
     
-    mKeyElements = [[NSMutableArray alloc] init];
-    [self initKeyboardElements: [self elements]];
+    mPressElements = [[NSMutableArray alloc] init];
+    [self initPressElements: [self elements]];
     
     return self;
 }
@@ -74,28 +76,28 @@
 //=========================================================== 
 - (void) dealloc
 {
-    [mKeyElements release];
+    [mPressElements release];
     
-    mKeyElements = nil;
+    mPressElements = nil;
     [super dealloc];
 }
 
 #pragma mark -
-#pragma mark Keyboards Elements
+#pragma mark Elements
 
-- (NSArray *) keyElements;
+- (NSArray *) pressElements;
 {
-    return mKeyElements;
+    return mPressElements;
 }
 
 - (unsigned) numberOfKeys;
 {
-    return [mKeyElements count];
+    return [mPressElements count];
 }
 
 - (void) addElementsToQueue: (DDHidQueue *) queue;
 {
-    [queue addElements: mKeyElements];
+    [queue addElements: mPressElements];
 }
 
 #pragma mark -
@@ -113,45 +115,37 @@
 
 @end
 
-@implementation DDHidKeyboard (DDHidKeyboardDelegate)
+@implementation DDHidAppleMikey (DDHidAppleMikeyDelegate)
 
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-               keyDown: (unsigned) usageId;
+- (void) ddhidAppleMikey:(DDHidAppleMikey *)mikey press:(unsigned int)usageId upOrDown:(BOOL)upOrDown
 {
     if ([mDelegate respondsToSelector: _cmd])
-        [mDelegate ddhidKeyboard: keyboard keyDown: usageId];
-}
-
-- (void) ddhidKeyboard: (DDHidKeyboard *) keyboard
-                 keyUp: (unsigned) usageId;
-{
-    if ([mDelegate respondsToSelector: _cmd])
-        [mDelegate ddhidKeyboard: keyboard keyUp: usageId];
+        [mDelegate ddhidAppleMikey: mikey press: usageId upOrDown:(BOOL)upOrDown];
 }
 
 @end
 
-@implementation DDHidKeyboard (Private)
+@implementation DDHidAppleMikey (Private)
 
-- (void) initKeyboardElements: (NSArray *) elements;
+- (void) initPressElements: (NSArray *) elements;
 {
     NSEnumerator * e = [elements objectEnumerator];
     DDHidElement * element;
     while (element = [e nextObject])
     {
-        unsigned usagePage = [[element usage] usagePage];
-        unsigned usageId = [[element usage] usageId];
-        if (usagePage == kHIDPage_KeyboardOrKeypad)
-        {
-            if (((usageId >= 0x04) && (usageId <= 0xA4)) ||
-                ((usageId >= 0xE0) && (usageId <= 0xE7)))
+//        unsigned usagePage = [[element usage] usagePage];
+//        unsigned usageId = [[element usage] usageId];
+//        if (usagePage == kHIDPage_KeyboardOrKeypad)
+//        {
+//            if ((usageId >= 0x04) && (usageId <= 0xA4) ||
+//                (usageId >= 0xE0) && (usageId <= 0xE7))
             {
-                [mKeyElements addObject: element];
+                [mPressElements addObject: element];
             }
-        }
+//        }
         NSArray * subElements = [element elements];
         if (subElements != nil)
-            [self initKeyboardElements: subElements];
+            [self initPressElements: subElements];
     }
 }
 
@@ -163,10 +157,7 @@
         DDHidElement * element = [self elementForCookie: [event elementCookie]];
         unsigned usageId = [[element usage] usageId];
         SInt32 value = [event value];
-        if (value == 1)
-            [self ddhidKeyboard: self keyDown: usageId];
-        else
-            [self ddhidKeyboard: self keyUp: usageId];
+        [self ddhidAppleMikey:self press:usageId upOrDown:value==1];
     }
 }
 
